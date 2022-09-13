@@ -1,3 +1,3 @@
-# github-vu5hd9
+crypto sports betting website
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/github-vu5hd9)
+built with nextjs and tailwind
