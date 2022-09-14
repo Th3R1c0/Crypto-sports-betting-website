@@ -1,55 +1,112 @@
+import { createServer, Model} from "miragejs"
+import {useState, useEffect} from 'react';
+createServer({
+  models: {
+    bet: Model,
+  },
+
+  routes() {
+    this.namespace = "api"
+
+    this.get("/bets/latest", (schema, request) => {
+      return schema.bets.all()
+    })
+  },
+
+  seeds(server) {
+    server.create("bet", 
+        {"game": "blackjack",
+        "user": "user1",
+        "time": 12,
+        "bet_ammount": 1999,
+        "multiplier": 4,
+        "payout": 1000044
+    })
+    server.create("bet", 
+        {"game": "blackjack",
+        "user": "user1",
+        "time": 12,
+        "bet_ammount": 1999,
+        "multiplier": 4,
+        "payout": 1000044
+    })    
+    server.create("bet", 
+        {"game": "blackjack",
+        "user": "user1",
+        "time": 12,
+        "bet_ammount": 1999,
+        "multiplier": 4,
+        "payout": 1000044
+    })
+  },
+})
+
+interface livebet {
+    game: string;
+    user: string;
+    time: number;
+    bet_ammount: number;
+    multiplier: number;
+    payout: number;
+}
+
+const Render_bets = (data) => {
+    console.log(data)
+    return (
+        <>
+            {data.bets.map(bet => (
+                <div className="w-full h-max text-white flex justify-between p-2">
+                    <p>{bet.game}</p>
+                    <p>{bet.user}</p>
+                    <p>{bet.time}</p>
+                    <p>{bet.bet_ammount}</p>
+                    <p>{bet.multiplier}</p>
+                    <p>{bet.payout}</p>
+                </div>
+            ))}
+        </>
+    )
+}
 
 const LiveBets = () => {
-  return (
-    <>
-      <div className="w-full h-max text-white flex justify-between p-2">
-          {" "}
-          {/* live betting stats */}
-          <div className="text-left pr-2 space-y-2">
-            <p className="font-bold text-xl">Game</p>
-            <p>Game 1 </p>
-            <p>Game 2 </p>
-            <p>Game 3 </p>
-            <p>Game 4 </p>
-          </div>
-          <div className="hidden sm:inline  space-y-2 text-right">
-            <p className=" text-xl font-bold">User</p>
-            <p>user1</p>
-            <p>user1</p>
-            <p>user1</p>
-            <p>user1</p>
-          </div>
-          <div className="hidden sm:inline space-y-2 text-right ">
-            <p className="text-xl font-bold">Time</p>
-            <p>22:4:35</p>
-            <p>22:4:35</p>
-            <p>22:4:35</p>
-            <p>22:4:35</p>
-          </div>
-          <div className="text-right space-y-2">
-            <p className="text-xl font-bold">Bet Ammount</p>
-            <p>435 BTC</p>
-            <p>435 BTC</p>
-            <p>435 BTC</p>
-            <p>435 BTC</p>
-          </div>
-          <div className="hidden sm:inline space-y-2 text-right">
-            <p className="text-xl font-bold">Multiplier</p>
-            <p> 10X </p>
-            <p> 10X </p>
-            <p> 10X </p>
-            <p> 10X </p>
-          </div>
-          <div className="text-right space-y-2">
-            <p className="text-xl font-bold">Payout</p>
-            <p>22,000 BTC </p>
-            <p>22,000 BTC </p>
-            <p>22,000 BTC </p>
-            <p>22,000 BTC </p>
-          </div>
-        </div>
-    </>
-  )
+    const [data, setData] = useState<livebet>(undefined)
+    useEffect(() => {
+        fetch('api/bets/latest').then(res => res.json()).then(data => {setData(data); console.log(data.bets[0].bet_ammount)})
+    }, [])
+    if (data === undefined){
+        console.log('dfsadsafdsa')
+        return <h1> loading </h1>
+    }
+    return (
+        <>
+            <div className="w-full h-max text-3xl text-white flex justify-between p-2">
+                <p> game </p>
+                <p>user</p>
+                <p>time</p>
+                <p>bet ammount</p>
+                <p>multiplier</p>
+                <p>payout</p>
+            </div>
+            
+            <div className="space-y-4">
+            {data.bets.map(bet => (
+                <div key={bet.id} className="w-full h-max text-2xl text-white flex justify-between p-2">
+                    <p>{bet.game}</p>
+                    <p>{bet.user}</p>
+                    <p>{bet.time}</p>
+                    <p>{bet.bet_ammount}</p>
+                    <p>{bet.multiplier}</p>
+                    <p>{bet.payout}</p>
+                </div>
+            ))}
+            </div>
+            
+            
+            
+            
+
+        </>
+    )
 }
 
 export default LiveBets;
